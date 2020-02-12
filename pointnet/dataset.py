@@ -8,6 +8,7 @@ import sys
 from tqdm import tqdm 
 import json
 from plyfile import PlyData, PlyElement
+import pdb
 
 def get_segmentation_classes(root):
     catfile = os.path.join(root, 'synsetoffset2category.txt')
@@ -153,20 +154,26 @@ class ModelNetDataset(data.Dataset):
         self.fns = []
         with open(os.path.join(root, '{}.txt'.format(self.split)), 'r') as f:
             for line in f:
-                self.fns.append(line.strip())
+                self.fns.append(line.strip().split('/'))
 
         self.cat = {}
+        pdb.set_trace()
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../misc/modelnet_id.txt'), 'r') as f:
             for line in f:
                 ls = line.strip().split()
                 self.cat[ls[0]] = int(ls[1])
 
-        print(self.cat)
+        pdb.set_trace()
+        #print("cat: \n", self.cat, "\n")
         self.classes = list(self.cat.keys())
+        #print("classes: \n", self.classes, "\n")
+        #print("fns: \n", self.fns, "\n")
 
     def __getitem__(self, index):
         fn = self.fns[index]
+        print("fn: \n", fn, "\n")
         cls = self.cat[fn.split('/')[0]]
+        print("cls: \n", cls, "\n")
         with open(os.path.join(self.root, fn), 'rb') as f:
             plydata = PlyData.read(f)
         pts = np.vstack([plydata['vertex']['x'], plydata['vertex']['y'], plydata['vertex']['z']]).T
@@ -210,6 +217,7 @@ if __name__ == '__main__':
     if dataset == 'modelnet':
         gen_modelnet_id(datapath)
         d = ModelNetDataset(root=datapath)
+        pdb.set_trace()
         print(len(d))
         print(d[0])
 
