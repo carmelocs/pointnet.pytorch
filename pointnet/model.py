@@ -8,6 +8,7 @@ import numpy as np
 import torch.nn.functional as F
 
 
+# Spatial Transform Network T-Net in paper
 class STN3d(nn.Module):
     def __init__(self):
         super(STN3d, self).__init__()
@@ -103,6 +104,7 @@ class PointNetfeat(nn.Module):
         n_pts = x.size()[2]
         trans = self.stn(x)
         x = x.transpose(2, 1)
+        # Input transform, bmm performs a batch matrix-matrix product of matrices
         x = torch.bmm(x, trans)
         x = x.transpose(2, 1)
         x = F.relu(self.bn1(self.conv1(x)))
