@@ -53,22 +53,22 @@ class FeatNet(nn.Module):
         self.bn2 = nn.BatchNorm1d(128)
         self.bn3 = nn.BatchNorm1d(1024)
 
-        def forward(self, x):
-            n_pts = x.size()[2]
-            trans_matrix3d = self.stn(x)
-            x = x.transpose(2,1)
-            # Input transform, bmm performs a batch matrix-matrix product of matrices
-            x = torch.bmm(x, trans_matrix3d)
-            x = x.transpose(2,1)
+    def forward(self, x):
+        n_pts = x.size()[2]
+        trans_matrix3d = self.stn(x)
+        x = x.transpose(2,1)
+        # Input transform, bmm performs a batch matrix-matrix product of matrices
+        x = torch.bmm(x, trans_matrix3d)
+        x = x.transpose(2,1)
 
-            x = F.relu(self.bn1(self.conv1(x)))
-            x = F.relu(self.bn2(self.conv2(x)))
-            x = self.bn3(self.conv3(x))
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = F.relu(self.bn2(self.conv2(x)))
+        x = self.bn3(self.conv3(x))
 
-            x = torch.max(x,2, keepdim=True)[0]
-            x = x.view(-1, 1024)
+        x = torch.max(x,2, keepdim=True)[0]
+        x = x.view(-1, 1024)
 
-            return x
+        return x, trans_matrix3d
 
 
 class PointNetCls(nn.Module):
@@ -97,5 +97,9 @@ if __name__ == '__main__':
     print("input transform matrix size ", out.size())
 
     pt_feat = FeatNet()
-    out = pt_feat(sim_data)
+    out, _ = pt_feat(sim_data)
     print('global feature size: ', out.size())
+
+    cls = PointNetCls()
+    out, _ = cls(sim_data)
+    print('class: ', out.size())
