@@ -28,7 +28,7 @@ class STN3d(nn.Module):
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(x)))
         x = F.relu(self.bn3(self.conv3(x)))
-        x = torch.max(x, 2, keepdim=True)[0] # 只返回最大值的value
+        x = torch.max(x, 2, keepdim=True)[0] # [0]只返回最大值的value
         x = x.view(-1, 1024) # n*1024
 
         x = F.relu(self.bn4(self.fc1(x)))
@@ -102,4 +102,4 @@ if __name__ == '__main__':
 
     cls = PointNetCls()
     out, _ = cls(sim_data)
-    print('class: ', out.size())
+    print('class matrix: ', out.size())
