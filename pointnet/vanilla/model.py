@@ -36,6 +36,8 @@ class STN3d(nn.Module):
         x = self.fc3(x)
 
         iden = Variable(torch.from_numpy(np.eye(3).flatten().astype(np.float32))).view(1,9).repeat(batchsize,1)
+        if x.is_cuda:
+            iden = iden.cuda()
         x = x + iden
         x = x.view(-1, 3, 3)
         return x
