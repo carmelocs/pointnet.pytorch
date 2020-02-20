@@ -24,8 +24,8 @@ parser.add_argument(
     '--nepoch', type=int, default=250, help='number of epochs to train for')
 parser.add_argument('--outf', type=str, default='cls', help='output folder')
 parser.add_argument('--model', type=str, default='', help='model path')
-parser.add_argument('--dataset', type=str, required=True, help="dataset path")
-parser.add_argument('--dataset_type', type=str, default='shapenet', help="dataset type shapenet|modelnet40")
+parser.add_argument('--dataset', type=str, default='./data/modelnet40_ply_hdf5_2048', help="dataset path")
+parser.add_argument('--dataset_type', type=str, default='modelnet40', help="dataset type shapenet|modelnet40")
 parser.add_argument('--feature_transform', action='store_true', help="use feature transform")
 
 opt = parser.parse_args()
@@ -129,6 +129,8 @@ for epoch in range(opt.nepoch):
             print('[%d: %d/%d] %s loss: %f accuracy: %f' % (epoch, i, num_batch, blue('test'), loss.item(), correct.item()/float(opt.batchSize)))
 
     scheduler.step()
+    if not os.path.exists(opt.outf):
+        os.makedirs(opt.outf)
     torch.save(classifier.state_dict(), '%s/cls_model_%d.pth' % (opt.outf, epoch))
 
 total_correct = 0
