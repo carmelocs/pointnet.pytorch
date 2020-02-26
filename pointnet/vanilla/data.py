@@ -80,8 +80,8 @@ class ModelNet40(Dataset):
 
 
 if __name__ == '__main__':
-    train = ModelNet40(1024)
-    test = ModelNet40(1024, 'test')
+    train = ModelNet40(root='./data/modelnet40_ply_hdf5_2048',num_points=1024)
+    test = ModelNet40(root='./data/modelnet40_ply_hdf5_2048',num_points=1024, partition='test')
     for data, label in train:
         print(data.shape)
         print(label.shape)
