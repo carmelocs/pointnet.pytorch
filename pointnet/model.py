@@ -18,7 +18,7 @@ class STN3d(nn.Module):
         self.fc1 = nn.Linear(1024, 512)
         self.fc2 = nn.Linear(512, 256)
         self.fc3 = nn.Linear(256, 9)
-        self.relu = nn.ReLU()
+        #self.relu = nn.ReLU()
 
         self.bn1 = nn.BatchNorm1d(64)
         self.bn2 = nn.BatchNorm1d(128)

@@ -23,6 +23,7 @@ def gen_modelnet_id(root):
     with open(os.path.join(root, 'shape_names.txt'), 'r') as f:
         for line in f:
             classes.append(line.strip())
+    #guarantee to get rid of duplicate classes
     classes = np.unique(classes)
 
     return classes
@@ -82,6 +83,10 @@ class ModelNet40(Dataset):
 if __name__ == '__main__':
     train = ModelNet40(root='./data/modelnet40_ply_hdf5_2048',num_points=1024)
     test = ModelNet40(root='./data/modelnet40_ply_hdf5_2048',num_points=1024, partition='test')
+    """
     for data, label in train:
         print(data.shape)
         print(label.shape)
+    """
+    classes = gen_modelnet_id(root='./data/modelnet40_ply_hdf5_2048')
+    print(classes, '\n', type(classes))
